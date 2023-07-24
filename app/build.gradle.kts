@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -35,14 +35,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
+    }
+    kotlin {
+        jvmToolchain(11)
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -66,9 +69,17 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.accompanist.navigation.animation)
     implementation(libs.accompanist.systemuicontroller)
+
     implementation(libs.hilt)
     kapt(libs.kapt.hilt)
     implementation(libs.navigation.compose)
+
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.sandwich)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

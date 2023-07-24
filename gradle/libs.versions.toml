@@ -2,15 +2,19 @@
 agp = "8.2.0-alpha13"
 kotlin = "1.8.10"
 hilt = "2.44"
-core-ktx = "1.9.0"
+core-ktx = "1.10.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.2"
-compose-bom = "2023.03.00"
-google-accompanist = "0.31.2-alpha"
-navigation-compose="2.5.3"
+compose-bom = "2023.06.01"
+google-accompanist = "0.31.5-beta"
+navigation-compose = "2.6.0"
+okhttp = "4.10.0"
+gson = "2.10.1"
+sandwich = "1.3.7"
+converter-gson = "2.9.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -30,8 +34,14 @@ material3 = { group = "androidx.compose.material3", name = "material3" }
 accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "google-accompanist" }
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "google-accompanist" }
 hilt = { group = "com.google.dagger", name = 'hilt-android', version.ref = "hilt" }
-kapt-hilt = {group = "com.google.dagger",name ="hilt-android-compiler",version.ref="hilt"}
-navigation-compose = {group="androidx.navigation",name="navigation-compose",version.ref="navigation-compose"}
+kapt-hilt = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+sandwich = { group = "com.github.skydoves", name = "sandwich", version.ref = "sandwich" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
