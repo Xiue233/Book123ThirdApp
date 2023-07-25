@@ -5,9 +5,11 @@ import io.github.xiue233.book123.model.BookDetail
 import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.model.BookSearchResult
 import io.github.xiue233.book123.model.BookSummary
+import io.github.xiue233.book123.model.CheckBookFileResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface Book123Service {
     companion object {
@@ -83,5 +85,10 @@ interface Book123Service {
     suspend fun fetchBookDetail(
         @Path("isbn") isbn: String
     ): ApiResponse<BookDetail>
+
+    @GET("https://static2.file123.info/api/checkHasFile")
+    suspend fun checkHasBookFile(
+        @Query("fileName") fileName: String
+    ): ApiResponse<CheckBookFileResult>
 
 }
