@@ -47,8 +47,7 @@ fun BookApp(
             )
         }
         composable(NavRoutes.Main.route) {
-            MainScreen(
-            )
+            MainScreen(mainViewModel, navigationActions)
         }
     }
 }
