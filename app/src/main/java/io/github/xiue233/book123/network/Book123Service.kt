@@ -11,6 +11,47 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
+object BookTags {
+    const val RECENT_UPDATE = "最近更新"
+    const val LITERATURE = "文学"
+    const val SOCIETY_CULTURE = "社会文化"
+    const val HISTORY = "历史"
+    const val ECONOMICS = "经济"
+    const val SCIENCE_AND_ENGINEERING = "理工科"
+    const val POLITICS = "政治"
+    const val HEALTH = "健康"
+    const val NATURAL_SCIENCE = "自然科学"
+    const val COMPUTER = "计算机"
+    const val DESIGN = "设计"
+    const val FOOD_AND_TRAVEL = "美食旅行"
+    const val THOUGHTS = "思想"
+    const val BIOLOGY = "生物"
+    const val ARCHITECTURE = "建筑"
+    const val PICTURE_BOOK = "绘本"
+    const val ASTRONOMICAL = "天文"
+
+    val tags: List<String> = ArrayList<String>().apply {
+        add(RECENT_UPDATE)
+        add(LITERATURE)
+        add(SOCIETY_CULTURE)
+        add(HISTORY)
+        add(ECONOMICS)
+        add(SCIENCE_AND_ENGINEERING)
+        add(POLITICS)
+        add(HEALTH)
+        add(NATURAL_SCIENCE)
+        add(COMPUTER)
+        add(DESIGN)
+        add(FOOD_AND_TRAVEL)
+        add(THOUGHTS)
+        add(BIOLOGY)
+        add(ARCHITECTURE)
+        add(PICTURE_BOOK)
+        add(ASTRONOMICAL)
+    }
+
+}
+
 interface Book123Service {
     companion object {
         const val BASE_URL = "https://www.book123.info/"

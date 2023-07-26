@@ -69,8 +69,10 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.accompanist.navigation.animation)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.compose.window.size)
 
     implementation(libs.hilt)
+    implementation(libs.androidx.window)
     kapt(libs.kapt.hilt)
     implementation(libs.navigation.compose)
     implementation(libs.coil)
