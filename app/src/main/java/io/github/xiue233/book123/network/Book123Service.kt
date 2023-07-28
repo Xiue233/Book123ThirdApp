@@ -6,6 +6,7 @@ import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.model.BookSearchResult
 import io.github.xiue233.book123.model.BookSummary
 import io.github.xiue233.book123.model.CheckBookFileResult
+import io.github.xiue233.book123.model.SimpleSearchResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -126,6 +127,13 @@ interface Book123Service {
     suspend fun fetchBookDetail(
         @Path("isbn") isbn: String
     ): ApiResponse<BookDetail>
+
+    @GET("api/simple_search")
+    suspend fun simpleSearch(
+        @Query("key") key: String,
+        @Query("count") count: Int = 5,
+        @Query("page") page: Int = 1,
+    ): ApiResponse<SimpleSearchResult>
 
     @GET("https://static2.file123.info/api/checkHasFile")
     suspend fun checkHasBookFile(

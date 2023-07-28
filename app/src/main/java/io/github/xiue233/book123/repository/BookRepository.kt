@@ -6,6 +6,7 @@ import com.skydoves.sandwich.suspendOnSuccess
 import io.github.xiue233.book123.model.BookDetail
 import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.model.CheckBookFileResult
+import io.github.xiue233.book123.model.SimpleSearchResult
 import io.github.xiue233.book123.network.Book123Service
 import io.github.xiue233.book123.network.EmptyRequestHandler
 import io.github.xiue233.book123.network.RequestHandler
@@ -21,6 +22,12 @@ import kotlin.coroutines.CoroutineContext
 
 
 interface BookRepository {
+    fun simpleSearchByKey(
+        key: String,
+        count: Int = 5,
+        page: Int = 1,
+        requestHandler: RequestHandler = EmptyRequestHandler
+    ): Flow<List<BookPreview>>
 
     fun searchBookByTag(
         tag: String,
@@ -65,7 +72,7 @@ interface BookRepository {
     ): Flow<BookSummaries>
 
     fun fetchRecentHotBooks(
-        tag: String = "",
+        tag: String = "undefined",
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<List<BookPreview>>
 
@@ -94,6 +101,23 @@ fun <T> BookRepositoryImpl.requestWithHandler(
 class BookRepositoryImpl @Inject constructor(
     private val book123Service: Book123Service
 ) : BookRepository {
+    override fun simpleSearchByKey(
+        key: String,
+        count: Int,
+        page: Int,
+        requestHandler: RequestHandler
+    ): Flow<List<BookPreview>> = requestWithHandler(requestHandler) {
+        flow {
+            book123Service.simpleSearch(
+                key, count, page
+            ).onFailure {
+                requestHandler.onFailure(message())
+            }.suspendOnSuccess {
+                emit(data.books)
+            }
+        }
+    }
+
     override fun searchBookByTag(
         tag: String,
         count: Int,
