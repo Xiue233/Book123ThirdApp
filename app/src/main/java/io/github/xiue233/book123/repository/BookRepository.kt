@@ -1,12 +1,12 @@
 package io.github.xiue233.book123.repository
 
+import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onFailure
 import com.skydoves.sandwich.suspendOnSuccess
 import io.github.xiue233.book123.model.BookDetail
 import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.model.CheckBookFileResult
-import io.github.xiue233.book123.model.SimpleSearchResult
 import io.github.xiue233.book123.network.Book123Service
 import io.github.xiue233.book123.network.EmptyRequestHandler
 import io.github.xiue233.book123.network.RequestHandler
@@ -29,7 +29,7 @@ interface BookRepository {
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<List<BookPreview>>
 
-    fun searchBookByTag(
+    suspend fun searchBookByTag(
         tag: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
@@ -38,7 +38,7 @@ interface BookRepository {
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
 
-    fun searchBooksByKey(
+    suspend fun searchBooksByKey(
         key: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
@@ -48,7 +48,7 @@ interface BookRepository {
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
 
-    fun searchBooksByAuthor(
+    suspend fun searchBooksByAuthor(
         author: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
@@ -57,7 +57,7 @@ interface BookRepository {
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
 
-    fun searchBooksByPublisher(
+    suspend fun searchBooksByPublisher(
         publisher: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
@@ -66,22 +66,22 @@ interface BookRepository {
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
 
-    fun searchRelatedBooksByISBN(
+    suspend fun searchRelatedBooksByISBN(
         isbn: String,
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
 
-    fun fetchRecentHotBooks(
+    suspend fun fetchRecentHotBooks(
         tag: String = "undefined",
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<List<BookPreview>>
 
-    fun fetchBookDetail(
+    suspend fun fetchBookDetail(
         isbn: String,
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookDetail>
 
-    fun checkHasBookFile(
+    suspend fun checkHasBookFile(
         fileName: String,
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<CheckBookFileResult>
@@ -101,6 +101,7 @@ fun <T> BookRepositoryImpl.requestWithHandler(
 class BookRepositoryImpl @Inject constructor(
     private val book123Service: Book123Service
 ) : BookRepository {
+    @WorkerThread
     override fun simpleSearchByKey(
         key: String,
         count: Int,
@@ -118,7 +119,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchBookByTag(
+    override suspend fun searchBookByTag(
         tag: String,
         count: Int,
         page: Int,
@@ -140,7 +141,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchBooksByKey(
+    override suspend fun searchBooksByKey(
         key: String,
         count: Int,
         page: Int,
@@ -165,7 +166,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchBooksByAuthor(
+    override suspend fun searchBooksByAuthor(
         author: String,
         count: Int,
         page: Int,
@@ -187,7 +188,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchBooksByPublisher(
+    override suspend fun searchBooksByPublisher(
         publisher: String,
         count: Int,
         page: Int,
@@ -209,7 +210,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchRelatedBooksByISBN(
+    override suspend fun searchRelatedBooksByISBN(
         isbn: String,
         requestHandler: RequestHandler
     ): Flow<BookSummaries> = requestWithHandler(requestHandler) {
@@ -223,7 +224,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun fetchRecentHotBooks(
+    override suspend fun fetchRecentHotBooks(
         tag: String,
         requestHandler: RequestHandler
     ): Flow<List<BookPreview>> = requestWithHandler(requestHandler) {
@@ -238,7 +239,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun fetchBookDetail(
+    override suspend fun fetchBookDetail(
         isbn: String,
         requestHandler: RequestHandler
     ): Flow<BookDetail> = requestWithHandler(requestHandler) {
@@ -253,7 +254,7 @@ class BookRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun checkHasBookFile(
+    override suspend fun checkHasBookFile(
         fileName: String,
         requestHandler: RequestHandler
     ): Flow<CheckBookFileResult> = requestWithHandler(requestHandler) {

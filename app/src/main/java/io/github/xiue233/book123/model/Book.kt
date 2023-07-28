@@ -7,17 +7,21 @@ import io.github.xiue233.book123.network.Book123Service
 interface Book {
     val isbn: String
     val title: String
-    val imgUrl: String
+    val img: String
     val author: String
     val imgHost: String
     val downloadHost: String
+
+    fun getImgUrl(
+        imgHost: String = Book123Service.IMG_HOST_URL
+    ) = imgHost + img
 }
 
 data class BookPreview(
     override val isbn: String,
     override val title: String,
     @SerializedName("img")
-    override val imgUrl: String,
+    override val img: String,
     override val author: String,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
@@ -27,7 +31,7 @@ data class BookSummary(
     override val isbn: String,
     override val title: String,
     @SerializedName("img")
-    override val imgUrl: String,
+    override val img: String,
     override val author: String,
     val pubDate: String,
     val tags: List<String>,
@@ -41,7 +45,7 @@ data class BookDetail(
     override val isbn: String,
     override val title: String,
     @SerializedName("img")
-    override val imgUrl: String,
+    override val img: String,
     override val author: String,
     val binding: String,
     @SerializedName("catelogues") // A typo in json

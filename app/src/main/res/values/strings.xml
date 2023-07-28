@@ -3,4 +3,5 @@
     <string name="navigation_home">主页</string>
     <string name="navigation_sort">分类</string>
     <string name="navigation_mine">我的</string>
+    <string name="home_search_hint">书名、作者、ISBN</string>
 </resources>

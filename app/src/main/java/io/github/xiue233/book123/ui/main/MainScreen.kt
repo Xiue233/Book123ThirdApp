@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,7 +25,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import io.github.xiue233.book123.R
 import io.github.xiue233.book123.ui.main.home.HomeScreen
-import io.github.xiue233.book123.ui.main.home.HomeScreenState
 import io.github.xiue233.book123.ui.main.mine.MineScreen
 import io.github.xiue233.book123.ui.main.sort.SortScreen
 import io.github.xiue233.book123.ui.navigation.NavigationActions
@@ -120,10 +118,10 @@ private fun BottomNavigation(
     }
 }
 
-sealed class BottomNavigationType {
-    object Home : BottomNavigationType()
-    object Sort : BottomNavigationType()
-    object Mine : BottomNavigationType()
+sealed class BottomNavigationType(val type: String) {
+    object Home : BottomNavigationType("home")
+    object Sort : BottomNavigationType("sort")
+    object Mine : BottomNavigationType("mine")
 }
 
 data class BottomNavigationItem(
