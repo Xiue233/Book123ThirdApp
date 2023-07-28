@@ -1,9 +1,10 @@
 package io.github.xiue233.book123.ui.main
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -17,15 +18,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import io.github.xiue233.book123.R
+import io.github.xiue233.book123.ui.main.home.HomeScreen
+import io.github.xiue233.book123.ui.main.home.HomeScreenState
+import io.github.xiue233.book123.ui.main.mine.MineScreen
+import io.github.xiue233.book123.ui.main.sort.SortScreen
 import io.github.xiue233.book123.ui.navigation.NavigationActions
 
 private val BOTTOM_NAVIGATION_ITEMS
@@ -50,35 +53,32 @@ private val BOTTOM_NAVIGATION_ITEMS
 
 @Composable
 fun MainScreen(
-    mainViewModel: MainViewModel,
     navigationActions: NavigationActions,
+    state: MainScreenState = rememberMainScreenState(),
 ) {
-    //TODO move to view model
-    var selectedItemType: BottomNavigationType by remember {
-        mutableStateOf(
-            BottomNavigationType.Home
-        )
-    }
+    val selectedItemType: BottomNavigationType by state.selectedItem
 
     Scaffold(
         bottomBar = {
             BottomNavigation(
-                selectedItemType = selectedItemType
-            ) {
-                selectedItemType = it.type
-            }
+                selectedItemType = selectedItemType,
+                onItemClicked = {
+                    state.onSelectItem(it.type)
+                }
+            )
         },
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .statusBarsPadding()
         ) {
-            when (selectedItemType) {
-                BottomNavigationType.Home -> HomeScreen()
-                BottomNavigationType.Sort -> SortScreen()
-                BottomNavigationType.Mine -> MineScreen()
+            Crossfade(selectedItemType, label = "pager cross fade") {
+                when (it) {
+                    BottomNavigationType.Home -> HomeScreen()
+                    BottomNavigationType.Sort -> SortScreen()
+                    BottomNavigationType.Mine -> MineScreen()
+                }
             }
         }
     }
@@ -94,7 +94,8 @@ private fun BottomNavigation(
 ) {
     NavigationBar(
         containerColor = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
+        modifier = Modifier.navigationBarsPadding()
     ) {
         bottomNavigationItems.forEach { item ->
             val selected = item.type == selectedItemType
@@ -119,13 +120,13 @@ private fun BottomNavigation(
     }
 }
 
-private sealed class BottomNavigationType {
+sealed class BottomNavigationType {
     object Home : BottomNavigationType()
     object Sort : BottomNavigationType()
     object Mine : BottomNavigationType()
 }
 
-private data class BottomNavigationItem(
+data class BottomNavigationItem(
     val label: String,
     val icon: ImageVector,
     val type: BottomNavigationType

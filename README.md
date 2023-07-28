@@ -4,6 +4,10 @@
 
 ## 相关API
 
+### SimpleSearch
+
+https://www.book123.info/api/simple_search?count=5&page=1&key={key}
+
 ### 搜索
 
 https://www.book123.info/api/search
