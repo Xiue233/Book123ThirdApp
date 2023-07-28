@@ -3,6 +3,7 @@ package io.github.xiue233.book123.ui.component
 import android.media.tv.interactive.AppLinkInfo
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,12 +41,16 @@ fun BookPreviewItem(
     title: String,
     author: String,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Log.d("BookPreviewItem", imgURL)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
             .padding(10.dp)
             .then(modifier)
     ) {
@@ -66,7 +71,7 @@ fun BookPreviewItem(
                         )
                     )
                 ),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds,
         )
         Column(
             modifier = Modifier

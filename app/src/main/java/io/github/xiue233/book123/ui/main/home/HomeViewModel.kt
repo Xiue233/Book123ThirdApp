@@ -25,6 +25,10 @@ class HomeViewModel @Inject constructor(
     private var _active = mutableStateOf(false)
     val active: State<Boolean> = _active
 
+    fun onClickSimpleSearchItem(item: BookPreview) {
+        //TODO navigate to book detail screen
+    }
+
     fun onQueryChange(value: String) {
         _query.value = value
         if (value == "") {

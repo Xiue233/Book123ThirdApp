@@ -62,8 +62,11 @@ fun HomeScreen(
                             item(it.isbn) {
                                 BookPreviewItem(
                                     imgURL = it.getImgUrl(),
-                                    title = it.title ?: "null",
-                                    author = it.author ?: ""
+                                    title = it.title ?: "null", // avoid GSON parse a null value
+                                    author = it.author ?: "",
+                                    onClick = {
+                                        viewModel.onClickSimpleSearchItem(it)
+                                    }
                                 )
                             }
                         }
