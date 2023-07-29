@@ -40,6 +40,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun refreshRecommendBooks() {
+        _recommendState.value = RecommendState.Loading
         viewModelScope.launch {
             var state: RecommendState = RecommendState.None
             val booksWithTag = flow {
@@ -122,6 +123,11 @@ sealed class RecommendState {
     abstract val hotBooks: Map<String, List<BookPreview>>
 
     object None : RecommendState() {
+        override val hotBooks: Map<String, List<BookPreview>>
+            get() = mapOf()
+    }
+
+    object Loading : RecommendState() {
         override val hotBooks: Map<String, List<BookPreview>>
             get() = mapOf()
     }

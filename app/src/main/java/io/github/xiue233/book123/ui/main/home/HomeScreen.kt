@@ -59,6 +59,14 @@ fun HomeScreen(
                     )
                 }
 
+                is RecommendState.Loading -> {
+                    Text(
+                        text = "正在加载中...",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
                 is RecommendState.Failure -> {
                     Text(
                         text = "获取热门书籍推荐失败了XD:\n${(recommendState as RecommendState.Failure).errorMessage}",
