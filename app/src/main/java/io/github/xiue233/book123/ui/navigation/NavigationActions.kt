@@ -21,4 +21,10 @@ class NavigationActions(
             restoreState = true
         }
     }
+
+    val navigateToBookDetail: () -> Unit = {
+        navHostController.navigate(NavRoutes.BookDetail.route) {
+            //TODO use BookDetail/{isbn}
+        }
+    }
 }

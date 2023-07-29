@@ -11,10 +11,33 @@ interface Book {
     val author: String
     val imgHost: String
     val downloadHost: String
+}
 
+interface IBookPreview : Book
+
+abstract class AbstractBookPreview : IBookPreview {
     fun getImgUrl(
         imgHost: String = Book123Service.IMG_HOST_URL
     ) = imgHost + img
+}
+
+interface IBookSummary : IBookPreview {
+    val pubDate: String
+    val tags: List<String>
+    val rate: String
+    val summary: String
+}
+
+interface IBookDetail : IBookSummary {
+    val binding: String
+    val catalogues: List<String>
+    val comments: List<String>
+    val lastUpdate: String
+    val price: String
+    val publisher: String
+    val fileSize: Long
+    val fileType: String
+    val downloadUrl: String
 }
 
 data class BookPreview(
@@ -25,7 +48,7 @@ data class BookPreview(
     override val author: String,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
-) : Book
+) : AbstractBookPreview()
 
 data class BookSummary(
     override val isbn: String,
@@ -33,13 +56,13 @@ data class BookSummary(
     @SerializedName("img")
     override val img: String,
     override val author: String,
-    val pubDate: String,
-    val tags: List<String>,
-    val rate: String,
-    val summary: String,
+    override val pubDate: String,
+    override val tags: List<String>,
+    override val rate: String,
+    override val summary: String,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
-) : Book
+) : IBookSummary, AbstractBookPreview()
 
 data class BookDetail(
     override val isbn: String,
@@ -47,22 +70,22 @@ data class BookDetail(
     @SerializedName("img")
     override val img: String,
     override val author: String,
-    val binding: String,
+    override val binding: String,
     @SerializedName("catelogues") // A typo in json
-    val catalogues: List<String>,
-    val comments: List<String>,
-    val lastUpdate: String,
-    val price: String,
-    val pubDate: String,
-    val publisher: String,
-    val rate: String,
-    val summary: String,
-    val tags: List<String>,
-    val fileSize: Long,
-    val fileType: String,
-    val downloadUrl: String,
+    override val catalogues: List<String>,
+    override val comments: List<String>,
+    override val lastUpdate: String,
+    override val price: String,
+    override val pubDate: String,
+    override val publisher: String,
+    override val rate: String,
+    override val summary: String,
+    override val tags: List<String>,
+    override val fileSize: Long,
+    override val fileType: String,
+    override val downloadUrl: String,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
-) : Book {
+) : IBookDetail, AbstractBookPreview() {
     fun canDownload() = TextUtils.isEmpty(downloadUrl)
 }

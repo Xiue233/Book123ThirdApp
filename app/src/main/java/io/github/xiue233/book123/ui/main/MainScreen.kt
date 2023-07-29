@@ -17,14 +17,17 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
 import io.github.xiue233.book123.ui.main.home.HomeScreen
+import io.github.xiue233.book123.ui.main.home.HomeViewModel
 import io.github.xiue233.book123.ui.main.mine.MineScreen
 import io.github.xiue233.book123.ui.main.sort.SortScreen
 import io.github.xiue233.book123.ui.navigation.NavigationActions
@@ -73,9 +76,9 @@ fun MainScreen(
         ) {
             Crossfade(selectedItemType, label = "pager cross fade") {
                 when (it) {
-                    BottomNavigationType.Home -> HomeScreen()
-                    BottomNavigationType.Sort -> SortScreen()
-                    BottomNavigationType.Mine -> MineScreen()
+                    BottomNavigationType.Home -> HomeScreen(navigationActions)
+                    BottomNavigationType.Sort -> SortScreen(navigationActions)
+                    BottomNavigationType.Mine -> MineScreen(navigationActions)
                 }
             }
         }

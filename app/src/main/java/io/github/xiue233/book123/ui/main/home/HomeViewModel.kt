@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val bookRepository: BookRepository
+    private val bookRepository: BookRepository
 ) : ViewModel() {
     private var _searchState: MutableState<HomeSearchState> = mutableStateOf(HomeSearchState.None)
     val searchState: State<HomeSearchState> = _searchState
