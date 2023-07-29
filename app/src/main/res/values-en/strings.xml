@@ -5,4 +5,5 @@
     <string name="navigation_sort">Sort</string>
     <string name="navigation_mine">Mine</string>
     <string name="home_search_hint">Title, Author or ISBN</string>
+    <string name="book_list_expand_all">See all ></string>
 </resources>

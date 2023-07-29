@@ -2,15 +2,19 @@ package io.github.xiue233.book123.ui.main.home
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,33 +22,83 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
+import io.github.xiue233.book123.ui.component.BookList
 import io.github.xiue233.book123.ui.component.BookPreviewItem
 import io.github.xiue233.book123.ui.navigation.NavigationActions
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigationActions: NavigationActions,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    Column(
+    val recommendState by viewModel.recommendState
+
+    Box(
         modifier = Modifier
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.TopCenter
     ) {
-        HomeSearchBar(viewModel = viewModel)
+        HomeSearchBar(viewModel = viewModel, navigationActions.navigateToBookDetail)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = SearchBarDefaults.InputFieldHeight + 10.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            when (recommendState) {
+                is RecommendState.None -> {
+                    Text(
+                        text = "暂无热门书籍推荐",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                is RecommendState.Failure -> {
+                    Text(
+                        text = "获取热门书籍推荐失败了XD:\n${(recommendState as RecommendState.Failure).errorMessage}",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                is RecommendState.Has -> {
+                    for ((tag, books) in recommendState.hotBooks) {
+                        BookList(
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                            tag = tag,
+                            books = books,
+                            listMaxHeight = 500.dp, // allow nested scrolling
+                            userScrollEnabled = true,
+                            onItemClicked = { isbn ->
+                                navigationActions.navigateToBookDetail(isbn)
+                            },
+                            onExpandTagClicked = {
+                                //TODO navigate to sort screen with the specific tag
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeSearchBar(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    navigateToBookDetail: (String) -> Unit = {}
 ) {
     val query by viewModel.query
     val active by viewModel.active
     val searchState by viewModel.searchState
+
     DockedSearchBar(
         query = query,
         onQueryChange = viewModel::onQueryChange,
@@ -74,7 +128,7 @@ fun HomeSearchBar(
                                 title = it.title ?: "null", // avoid GSON parse a null value
                                 author = it.author ?: "",
                                 onClick = {
-                                    viewModel.onClickSimpleSearchItem(it)
+                                    navigateToBookDetail(it.isbn)
                                 }
                             )
                         }

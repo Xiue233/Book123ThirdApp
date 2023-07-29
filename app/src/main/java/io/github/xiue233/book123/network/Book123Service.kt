@@ -4,13 +4,11 @@ import com.skydoves.sandwich.ApiResponse
 import io.github.xiue233.book123.model.BookDetail
 import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.model.BookSearchResult
-import io.github.xiue233.book123.model.BookSummary
 import io.github.xiue233.book123.model.CheckBookFileResult
 import io.github.xiue233.book123.model.SimpleSearchResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 object BookTags {
     const val RECENT_UPDATE = "最近更新"
@@ -31,7 +29,7 @@ object BookTags {
     const val PICTURE_BOOK = "绘本"
     const val ASTRONOMICAL = "天文"
 
-    val tags: List<String> = ArrayList<String>().apply {
+    val TAGS: List<String> = ArrayList<String>().apply {
         add(RECENT_UPDATE)
         add(LITERATURE)
         add(SOCIETY_CULTURE)

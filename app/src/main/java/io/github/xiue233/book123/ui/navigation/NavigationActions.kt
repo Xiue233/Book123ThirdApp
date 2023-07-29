@@ -22,9 +22,9 @@ class NavigationActions(
         }
     }
 
-    val navigateToBookDetail: () -> Unit = {
-        navHostController.navigate(NavRoutes.BookDetail.route) {
-            //TODO use BookDetail/{isbn}
-        }
+    val navigateToBookDetail: (String) -> Unit = { isbn ->
+//        navHostController.navigate(NavRoutes.BookDetail.route) {
+//            //TODO use BookDetail/{isbn}
+//        }
     }
 }

@@ -1,0 +1,124 @@
+package io.github.xiue233.book123.ui.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import io.github.xiue233.book123.R
+import io.github.xiue233.book123.model.BookPreview
+
+@Preview
+@Composable
+fun BookListPreview() {
+    BookList(
+        tag = "最近更新",
+        books = listOf(
+            BookPreview("114514", "Book1", "", "Author1"),
+            BookPreview("1919810", "Book2", "", "Author2")
+        )
+    )
+}
+
+@Composable
+fun BookList(
+    modifier: Modifier = Modifier,
+    tag: String = "",
+    books: List<BookPreview> = listOf(),
+    userScrollEnabled: Boolean = true,
+    listMaxHeight: Dp = 0.dp, //0.dp means no limits
+    onItemClicked: (String) -> Unit = {}, // (isbn:String)->Unit
+    onExpandTagClicked: () -> Unit = {}
+) {
+    Column(
+        modifier = Modifier
+            .then(modifier),
+    ) {
+        if (tag.isNotEmpty()) {
+            BookListTopBar(tag = tag, onExpandTagClicked)
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Color.LightGray)
+            )
+        }
+        LazyColumn(
+            userScrollEnabled = userScrollEnabled,
+            modifier = if (listMaxHeight > 0.dp) {
+                Modifier.heightIn(max = listMaxHeight)
+            } else {
+                Modifier
+            }
+        ) {
+            books.forEach { book ->
+                item(book.isbn) {
+                    BookPreviewItem(
+                        imgURL = book.getImgUrl(),
+                        title = book.title ?: "Null",
+                        author = book.author ?: "", //avoid null passed by GSON
+                        onClick = {
+                            onItemClicked(book.isbn)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BookListTopBar(
+    tag: String,
+    onExpandTagClicked: () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .requiredHeight(46.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = tag,
+            modifier = Modifier
+                .weight(1f),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold
+            )
+        )
+        Text(
+            text = stringResource(id = R.string.book_list_expand_all),
+            modifier = Modifier
+                .weight(0.39f)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }) {
+                    onExpandTagClicked()
+                },
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.End,
+            color = Color.Gray
+        )
+    }
+}

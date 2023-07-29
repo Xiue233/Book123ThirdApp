@@ -33,7 +33,7 @@ interface BookRepository {
         tag: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
-        type: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
+        sort: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
         hasFile: Boolean = true,
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
@@ -42,7 +42,7 @@ interface BookRepository {
         key: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
-        type: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
+        sort: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
         hasFile: Boolean = true,
         isExact: Boolean = false, // "exact" means searching a book with 'key' as its name
         requestHandler: RequestHandler = EmptyRequestHandler
@@ -52,7 +52,7 @@ interface BookRepository {
         author: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
-        type: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
+        sort: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
         hasFile: Boolean = true,
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
@@ -61,7 +61,7 @@ interface BookRepository {
         publisher: String,
         count: Int = 10,
         page: Int = 1, // counts from 1
-        type: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
+        sort: Book123Service.Companion.SortType = Book123Service.Companion.SortType.LastUpdate,
         hasFile: Boolean = true,
         requestHandler: RequestHandler = EmptyRequestHandler
     ): Flow<BookSummaries>
@@ -123,14 +123,14 @@ class BookRepositoryImpl @Inject constructor(
         tag: String,
         count: Int,
         page: Int,
-        type: Book123Service.Companion.SortType,
+        sort: Book123Service.Companion.SortType,
         hasFile: Boolean,
         requestHandler: RequestHandler
     ): Flow<BookSummaries> = requestWithHandler(requestHandler) {
         flow<BookSummaries> {
             book123Service.searchBooksByTag(
                 tag, count, page,
-                type.type,
+                sort.type,
                 if (hasFile) Book123Service.Companion.HasFileSort.HasFile.type
                 else Book123Service.Companion.HasFileSort.All.type
             ).onFailure {
@@ -145,7 +145,7 @@ class BookRepositoryImpl @Inject constructor(
         key: String,
         count: Int,
         page: Int,
-        type: Book123Service.Companion.SortType,
+        sort: Book123Service.Companion.SortType,
         hasFile: Boolean,
         isExact: Boolean,
         requestHandler: RequestHandler
@@ -153,7 +153,7 @@ class BookRepositoryImpl @Inject constructor(
         flow<BookSummaries> {
             book123Service.searchBooksByKey(
                 key, count, page,
-                type.type,
+                sort.type,
                 if (hasFile) Book123Service.Companion.HasFileSort.HasFile.type
                 else Book123Service.Companion.HasFileSort.All.type,
                 if (isExact) Book123Service.Companion.SearchExactly.Exactly.type
@@ -170,14 +170,14 @@ class BookRepositoryImpl @Inject constructor(
         author: String,
         count: Int,
         page: Int,
-        type: Book123Service.Companion.SortType,
+        sort: Book123Service.Companion.SortType,
         hasFile: Boolean,
         requestHandler: RequestHandler
     ): Flow<BookSummaries> = requestWithHandler(requestHandler) {
         flow<BookSummaries> {
             book123Service.searchBooksByAuthor(
                 author, count, page,
-                type.type,
+                sort.type,
                 if (hasFile) Book123Service.Companion.HasFileSort.HasFile.type
                 else Book123Service.Companion.HasFileSort.All.type
             ).onFailure {
@@ -192,14 +192,14 @@ class BookRepositoryImpl @Inject constructor(
         publisher: String,
         count: Int,
         page: Int,
-        type: Book123Service.Companion.SortType,
+        sort: Book123Service.Companion.SortType,
         hasFile: Boolean,
         requestHandler: RequestHandler
     ): Flow<BookSummaries> = requestWithHandler(requestHandler) {
         flow<BookSummaries> {
             book123Service.searchBooksByPublisher(
                 publisher, count, page,
-                type.type,
+                sort.type,
                 if (hasFile) Book123Service.Companion.HasFileSort.HasFile.type
                 else Book123Service.Companion.HasFileSort.All.type
             ).onFailure {
