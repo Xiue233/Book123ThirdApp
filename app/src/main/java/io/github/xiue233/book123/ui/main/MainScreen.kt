@@ -1,6 +1,7 @@
 package io.github.xiue233.book123.ui.main
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -74,7 +75,10 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Crossfade(selectedItemType, label = "pager cross fade") {
+            Crossfade(
+                selectedItemType, label = "pager cross fade",
+                animationSpec = tween(100)
+            ) {
                 when (it) {
                     BottomNavigationType.Home -> HomeScreen(navigationActions)
                     BottomNavigationType.Sort -> SortScreen(navigationActions)
