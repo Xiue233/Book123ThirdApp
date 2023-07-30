@@ -1,5 +1,6 @@
 package io.github.xiue233.book123.ui.main.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
+import io.github.xiue233.book123.network.BookTags
 import io.github.xiue233.book123.ui.component.BookList
 import io.github.xiue233.book123.ui.component.BookPreviewItem
 import io.github.xiue233.book123.ui.navigation.NavigationActions
@@ -48,7 +49,6 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = SearchBarDefaults.InputFieldHeight + 10.dp)
-                .verticalScroll(rememberScrollState())
         ) {
             when (recommendState) {
                 is RecommendState.None -> {
@@ -76,20 +76,26 @@ fun HomeScreen(
                 }
 
                 is RecommendState.Has -> {
-                    for ((tag, books) in recommendState.hotBooks) {
-                        BookList(
-                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                            tag = tag,
-                            books = books,
-                            listMaxHeight = 500.dp, // allow nested scrolling
-                            userScrollEnabled = true,
-                            onItemClicked = { isbn ->
-                                navigationActions.navigateToBookDetail(isbn)
-                            },
-                            onExpandTagClicked = {
-                                //TODO navigate to sort screen with the specific tag
+                    LazyColumn {
+                        for (tag in BookTags.TAGS) {
+                            item(tag) {
+                                AnimatedVisibility(visible = recommendState.hotBooks.containsKey(tag)) {
+                                    BookList(
+                                        modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                                        tag = tag,
+                                        books = recommendState.hotBooks[tag]!!,
+                                        listMaxHeight = 500.dp, // allow nested scrolling
+                                        userScrollEnabled = true,
+                                        onItemClicked = { isbn ->
+                                            navigationActions.navigateToBookDetail(isbn)
+                                        },
+                                        onExpandTagClicked = {
+                                            //TODO navigate to sort screen with the specific tag
+                                        }
+                                    )
+                                }
                             }
-                        )
+                        }
                     }
                 }
             }

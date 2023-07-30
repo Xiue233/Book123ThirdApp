@@ -12,10 +12,8 @@ import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,8 +40,7 @@ class HomeViewModel @Inject constructor(
     fun refreshRecommendBooks() {
         _recommendState.value = RecommendState.Loading
         viewModelScope.launch {
-            var state: RecommendState = RecommendState.None
-            val booksWithTag = flow {
+            flow {
                 BookTags.TAGS.forEach { tag ->
                     bookRepository.fetchRecentHotBooks(
                         tag,
@@ -55,21 +52,20 @@ class HomeViewModel @Inject constructor(
                             }
 
                             override fun onFailure(message: String) {
-                                state = RecommendState.Failure(message)
+                                _recommendState.value = RecommendState.Failure(message)
                                 cancel()
                             }
                         }).collect {
                         emit(mapOf(tag to it))
                     }
                 }
-            }.flowOn(Dispatchers.IO).buffer()
-                .reduce { accumulator, value ->
-                    accumulator.plus(value)
+            }.flowOn(Dispatchers.IO)
+                .collect {
+                    if (_recommendState.value !is RecommendState.Has) {
+                        _recommendState.value = RecommendState.Has()
+                    }
+                    _recommendState.value.addHotBooks(it)
                 }
-            if (booksWithTag.isNotEmpty()) {
-                state = RecommendState.Has(booksWithTag)
-            }
-            _recommendState.value = state
         }
     }
 
@@ -120,26 +116,22 @@ sealed class HomeSearchState {
 }
 
 sealed class RecommendState {
-    abstract val hotBooks: Map<String, List<BookPreview>>
+    private val _hotBooks: MutableMap<String, List<BookPreview>> = mutableMapOf()
+    val hotBooks: Map<String, List<BookPreview>> = _hotBooks
 
-    object None : RecommendState() {
-        override val hotBooks: Map<String, List<BookPreview>>
-            get() = mapOf()
-    }
+    object None : RecommendState()
 
-    object Loading : RecommendState() {
-        override val hotBooks: Map<String, List<BookPreview>>
-            get() = mapOf()
-    }
+    object Loading : RecommendState()
 
     data class Failure(
         val errorMessage: String
-    ) : RecommendState() {
-        override val hotBooks: Map<String, List<BookPreview>>
-            get() = mapOf()
-    }
-
-    data class Has(
-        override val hotBooks: Map<String, List<BookPreview>>
     ) : RecommendState()
+
+    class Has() : RecommendState()
+
+    fun addHotBooks(
+        books: Map<String, List<BookPreview>>
+    ) {
+        _hotBooks.putAll(books)
+    }
 }
