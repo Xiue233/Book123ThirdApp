@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
+import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.network.BookTags
 import io.github.xiue233.book123.ui.component.BookList
 import io.github.xiue233.book123.ui.component.BookPreviewItem
@@ -76,27 +77,46 @@ fun HomeScreen(
                 }
 
                 is RecommendState.Has -> {
-                    LazyColumn {
-                        for (tag in BookTags.TAGS) {
-                            item(tag) {
-                                AnimatedVisibility(visible = recommendState.hotBooks.containsKey(tag)) {
-                                    BookList(
-                                        modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                                        tag = tag,
-                                        books = recommendState.hotBooks[tag]!!,
-                                        listMaxHeight = 500.dp, // allow nested scrolling
-                                        userScrollEnabled = true,
-                                        onItemClicked = { isbn ->
-                                            navigationActions.navigateToBookDetail(isbn)
-                                        },
-                                        onExpandTagClicked = {
-                                            //TODO navigate to sort screen with the specific tag
-                                        }
-                                    )
-                                }
-                            }
+                    HomeBookList(
+                        hotBooks = recommendState.hotBooks,
+                        onItemClicked = { isbn ->
+                            navigationActions.navigateToBookDetail(isbn)
+                        },
+                        onExpandTagClicked = { tag ->
+                            //TODO navigate to sort screen with the specific tag
                         }
-                    }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeBookList(
+    modifier: Modifier = Modifier,
+    hotBooks: Map<String, List<BookPreview>> = mapOf(),
+    tags: List<String> = BookTags.TAGS,
+    onItemClicked: (String) -> Unit = {},
+    onExpandTagClicked: (String) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        for (tag in tags) {
+            item(tag) {
+                AnimatedVisibility(visible = hotBooks.containsKey(tag)) {
+                    BookList(
+                        modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                        tag = tag,
+                        books = hotBooks[tag]!!,
+                        listMaxHeight = 500.dp, // allow nested scrolling
+                        userScrollEnabled = true,
+                        onItemClicked = onItemClicked,
+                        onExpandTagClicked = {
+                            onExpandTagClicked(tag)
+                        }
+                    )
                 }
             }
         }
