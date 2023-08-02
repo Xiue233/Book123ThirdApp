@@ -37,7 +37,7 @@ fun BookPreviewItemPreview() {
 }
 
 @Composable
-fun BookPreviewItem(
+fun BookPreviewItem( //TODO adapt to various sizes of screens
     imgURL: String,
     title: String,
     author: String,

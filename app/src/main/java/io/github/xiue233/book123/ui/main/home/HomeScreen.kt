@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
@@ -42,10 +43,14 @@ fun HomeScreen(
 
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .statusBarsPadding(),
         contentAlignment = Alignment.TopCenter
     ) {
-        HomeSearchBar(viewModel = viewModel, navigationActions.navigateToBookDetail)
+        HomeSearchBar(
+            viewModel = viewModel,
+            navigateToBookDetail = navigationActions.navigateToBookDetail
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -112,11 +117,18 @@ fun HomeBookList(
                         books = hotBooks[tag]!!,
                         listMaxHeight = 500.dp, // allow nested scrolling
                         userScrollEnabled = true,
-                        onItemClicked = onItemClicked,
                         onExpandTagClicked = {
                             onExpandTagClicked(tag)
                         }
-                    )
+                    ) {
+                        BookPreviewItem(
+                            imgURL = it.getImgUrl(),
+                            title = it.title,
+                            author = it.author
+                        ) {
+                            onItemClicked(it.isbn)
+                        }
+                    }
                 }
             }
         }
@@ -126,6 +138,7 @@ fun HomeBookList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeSearchBar(
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
     navigateToBookDetail: (String) -> Unit = {}
 ) {
@@ -141,11 +154,13 @@ fun HomeSearchBar(
         onActiveChange = viewModel::onActiveChange,
         placeholder = { Text(stringResource(id = R.string.home_search_hint)) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "search icon") },
-        modifier = Modifier.onFocusChanged {
-            if (!it.hasFocus) {
-                viewModel.onActiveChange(false)
+        modifier = Modifier
+            .onFocusChanged {
+                if (!it.hasFocus) {
+                    viewModel.onActiveChange(false)
+                }
             }
-        }
+            .then(modifier)
     ) {
         when (searchState) {
             is HomeSearchState.Success -> {

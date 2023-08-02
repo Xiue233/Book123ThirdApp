@@ -2,7 +2,6 @@ package io.github.xiue233.book123.ui.main
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -11,24 +10,21 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
 import io.github.xiue233.book123.ui.main.home.HomeScreen
-import io.github.xiue233.book123.ui.main.home.HomeViewModel
 import io.github.xiue233.book123.ui.main.mine.MineScreen
 import io.github.xiue233.book123.ui.main.sort.SortScreen
 import io.github.xiue233.book123.ui.navigation.NavigationActions
@@ -70,20 +66,17 @@ fun MainScreen(
             )
         },
     ) { paddingValues ->
-        Column(
+        Crossfade(
+            selectedItemType, label = "pager cross fade",
+            animationSpec = tween(100),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(bottom = paddingValues.calculateBottomPadding()) // allow screen adapt to status bar by itself
         ) {
-            Crossfade(
-                selectedItemType, label = "pager cross fade",
-                animationSpec = tween(100)
-            ) {
-                when (it) {
-                    BottomNavigationType.Home -> HomeScreen(navigationActions)
-                    BottomNavigationType.Sort -> SortScreen(navigationActions)
-                    BottomNavigationType.Mine -> MineScreen(navigationActions)
-                }
+            when (it) {
+                BottomNavigationType.Home -> HomeScreen(navigationActions)
+                BottomNavigationType.Sort -> SortScreen(navigationActions)
+                BottomNavigationType.Mine -> MineScreen(navigationActions)
             }
         }
     }
@@ -94,7 +87,7 @@ private fun BottomNavigation(
     bottomNavigationItems: List<BottomNavigationItem> = BOTTOM_NAVIGATION_ITEMS,
     selectedItemType: BottomNavigationType = BottomNavigationType.Home,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentColor: Color = LocalContentColor.current,
+    contentColor: Color = MaterialTheme.colorScheme.contentColorFor(containerColor),
     onItemClicked: (BottomNavigationItem) -> Unit = {}
 ) {
     NavigationBar(

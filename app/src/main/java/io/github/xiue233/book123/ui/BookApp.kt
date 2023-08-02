@@ -27,7 +27,7 @@ fun BookApp(
     }
 
     LaunchedEffect(Unit) {
-        systemUiController.setStatusBarColor(Color.Transparent)
+        systemUiController.setStatusBarColor(Color.Transparent, darkIcons = true)
     }
 
     NavHost(

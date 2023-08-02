@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.xiue233.book123.R
+import io.github.xiue233.book123.model.Book
 import io.github.xiue233.book123.model.BookPreview
 
 @Preview
@@ -37,19 +39,21 @@ fun BookListPreview() {
             BookPreview("114514", "Book1", "", "Author1"),
             BookPreview("1919810", "Book2", "", "Author2")
         )
-    )
+    ) {
+        BookPreviewItem(imgURL = it.getImgUrl(), title = it.title, author = it.author)
+    }
 }
 
 @Composable
-fun BookList(
+fun <BookT> BookList(
     modifier: Modifier = Modifier,
     tag: String = "",
-    books: List<BookPreview> = listOf(),
+    books: List<BookT> = listOf(),
     userScrollEnabled: Boolean = true,
     listMaxHeight: Dp = 0.dp, //0.dp means no limits
-    onItemClicked: (String) -> Unit = {}, // (isbn:String)->Unit
-    onExpandTagClicked: () -> Unit = {}
-) {
+    onExpandTagClicked: () -> Unit = {},
+    itemContent: @Composable LazyItemScope.(BookT) -> Unit
+) where BookT : Book {
     Column(
         modifier = Modifier
             .then(modifier),
@@ -73,14 +77,7 @@ fun BookList(
         ) {
             books.forEach { book ->
                 item(book.isbn) {
-                    BookPreviewItem(
-                        imgURL = book.getImgUrl(),
-                        title = book.title ?: "Null",
-                        author = book.author ?: "", //avoid null passed by GSON
-                        onClick = {
-                            onItemClicked(book.isbn)
-                        }
-                    )
+                    this.itemContent(book)
                 }
             }
         }
