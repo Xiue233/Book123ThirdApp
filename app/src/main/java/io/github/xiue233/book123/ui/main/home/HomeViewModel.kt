@@ -56,13 +56,20 @@ class HomeViewModel @Inject constructor(
                                 _recommendState.value = RecommendState.Failure(message)
                                 cancel()
                             }
-                        }).collect {
-                        emit(mapOf(tag to it))
-                    }
+                        })
+                        .collect {
+                            if (it.isNotEmpty()) {
+                                emit(mapOf(tag to it))
+                            }
+                        }
                 }
             }.flowOn(Dispatchers.IO)
                 .buffer()
                 .collect {
+                    if (it.isEmpty()) {
+                        _recommendState.value = RecommendState.None
+                        return@collect
+                    }
                     if (_recommendState.value !is RecommendState.Has) {
                         _recommendState.value = RecommendState.Has()
                     }
