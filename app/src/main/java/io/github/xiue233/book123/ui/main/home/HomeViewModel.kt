@@ -12,6 +12,7 @@ import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -60,6 +61,7 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }.flowOn(Dispatchers.IO)
+                .buffer()
                 .collect {
                     if (_recommendState.value !is RecommendState.Has) {
                         _recommendState.value = RecommendState.Has()
