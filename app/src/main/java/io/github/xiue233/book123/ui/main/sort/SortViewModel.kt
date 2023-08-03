@@ -13,8 +13,10 @@ import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import io.github.xiue233.book123.ui.component.MultiOptionsMenuState
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +24,7 @@ import javax.inject.Inject
 class SortViewModel @Inject constructor(
     private val bookRepository: BookRepository
 ) : ViewModel() {
-    private var _expandSortMenu: MutableState<Boolean> = mutableStateOf(true)
+    private var _expandSortMenu: MutableState<Boolean> = mutableStateOf(false)
     val expandSortMenu: State<Boolean> = _expandSortMenu
 
     private var _sortMenuState: MutableState<MultiOptionsMenuState> = mutableStateOf(
@@ -58,9 +60,9 @@ class SortViewModel @Inject constructor(
                 if (overlay) 1 // load data using new option
                 else if (bookListState.value !is BookSortListState.Success) 1
                 else bookListState.value.page + pageStep
-            val oldState = bookListState.value
             bookRepository.searchBookByTag(
                 tag = options["标签"]!!,
+                count = 30,
                 page = page,
                 sort = when (sortMenuState.value.optionState["排序方式"]) {
                     "最近更新" -> Book123Service.Companion.SortType.LastUpdate
@@ -75,7 +77,9 @@ class SortViewModel @Inject constructor(
                 },
                 requestHandler = object : RequestHandler {
                     override fun onStart() {
-                        _bookListState.value = BookSortListState.Loading
+                        if (overlay) {
+                            _bookListState.value = BookSortListState.Loading
+                        }
                     }
 
                     override fun onCompletion() {
@@ -91,12 +95,16 @@ class SortViewModel @Inject constructor(
                     _bookListState.value = BookSortListState.None
                     return@collect
                 }
-                _bookListState.value = if (overlay) BookSortListState.Success(it, page)
-                else {
-                    (oldState as BookSortListState.Success).copy(
-                        books = oldState.books + it,
-                        page = page
-                    )
+                _bookListState.update { oldState ->
+                    if (overlay) BookSortListState.Success(it, page)
+                    else if (oldState !is BookSortListState.Success) {
+                        BookSortListState.Success(it, page)
+                    } else {
+                        BookSortListState.Success(
+                            books = oldState.books + it,
+                            page = page
+                        )
+                    }
                 }
             }
         }

@@ -5,14 +5,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,10 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
@@ -61,6 +64,10 @@ fun SortScreen(
                 books = bookListState.books,
                 onItemClicked = { isbn ->
                     navigationActions.navigateToBookDetail(isbn)
+                },
+                onScrollToBottom = sortViewModel::onNextPageNeeded,
+                loadingIndicator = {
+                    LoadingIndicator()
                 }
             )
             this@Column.AnimatedVisibility(
@@ -122,16 +129,39 @@ fun SortTopBar(
 }
 
 @Composable
+private fun LoadingIndicator(
+    modifier: Modifier = Modifier,
+    showLoadingBar: Boolean = true,
+    message: String = "",
+    textStyle: TextStyle = MaterialTheme.typography.labelMedium
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (showLoadingBar) {
+            CircularProgressIndicator()
+        }
+        if (message.isNotEmpty()) {
+            Text(text = message, style = textStyle)
+        }
+    }
+}
+
+@Composable
 private fun SortScreenBookList(
     modifier: Modifier = Modifier,
     books: BookSummaries = listOf(),
     onItemClicked: (String) -> Unit = {},
+    onScrollToBottom: () -> Unit = {},
+    loadingIndicator: @Composable () -> Unit = {}
 ) {
     rememberLazyListState()
     BookList(
-        modifier = modifier, //TODO 上拉加载
+        modifier = modifier,
         books = books,
-        userScrollEnabled = false,
+        onScrollToBottom = onScrollToBottom,
+        loadingIndicator = loadingIndicator
     ) {
         BookSummaryItem(
             imgURL = it.getImgUrl(),

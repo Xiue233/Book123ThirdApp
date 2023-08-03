@@ -22,8 +22,8 @@ fun BookSummaryItem(
     modifier: Modifier = Modifier,
     imgURL: String,
     title: String,
-    author: String,
-    rate: String,
+    author: String?,
+    rate: String?,
     summary: String
 ) {
     Row(
@@ -45,18 +45,22 @@ fun BookSummaryItem(
                 .padding(10.dp),
         ) {
             Text(text = title, style = Typography.titleMedium)
-            Text(
-                text = author,
-                style = Typography.labelMedium.copy(
-                    fontWeight = FontWeight.SemiBold
-                ),
-                color = Color.Gray
-            )
-            Text(
-                text = "评分: $rate",
-                style = Typography.labelSmall,
-                color = Color.Gray
-            )
+            if (author?.isNotEmpty() == true) {
+                Text(
+                    text = author,
+                    style = Typography.labelMedium.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    color = Color.Gray
+                )
+            }
+            if (rate?.isNotEmpty() == true) {
+                Text(
+                    text = "评分: $rate",
+                    style = Typography.labelSmall,
+                    color = Color.Gray
+                )
+            }
             Text(
                 text = summary,
                 style = Typography.bodySmall,

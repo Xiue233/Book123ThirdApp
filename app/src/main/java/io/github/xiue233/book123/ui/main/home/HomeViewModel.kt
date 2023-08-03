@@ -12,6 +12,7 @@ import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -64,7 +65,6 @@ class HomeViewModel @Inject constructor(
                         }
                 }
             }.flowOn(Dispatchers.IO)
-                .buffer()
                 .collect {
                     if (it.isEmpty()) {
                         _recommendState.value = RecommendState.None
@@ -74,6 +74,7 @@ class HomeViewModel @Inject constructor(
                         _recommendState.value = RecommendState.Has()
                     }
                     _recommendState.value.addHotBooks(it)
+                    delay(300)
                 }
         }
     }

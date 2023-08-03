@@ -1,9 +1,9 @@
 package io.github.xiue233.book123.ui.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,9 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +47,7 @@ fun BookListPreview() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <BookT> BookList(
     modifier: Modifier = Modifier,
@@ -51,35 +55,46 @@ fun <BookT> BookList(
     books: List<BookT> = listOf(),
     userScrollEnabled: Boolean = true,
     listMaxHeight: Dp = 0.dp, //0.dp means no limits
+    lazyListState: LazyListState = rememberLazyListState(),
     onExpandTagClicked: () -> Unit = {},
+    onScrollToBottom: () -> Unit = {},
+    loadingIndicator: @Composable () -> Unit = {},
     itemContent: @Composable LazyItemScope.(BookT) -> Unit
 ) where BookT : Book {
-    Column(
-        modifier = Modifier
-            .then(modifier),
-    ) {
-        if (tag.isNotEmpty()) {
-            BookListTopBar(tag = tag, onExpandTagClicked)
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Color.LightGray)
-            )
-        }
-        LazyColumn(
-            userScrollEnabled = userScrollEnabled,
-            modifier = if (listMaxHeight > 0.dp) {
+    LazyColumn(
+        state = lazyListState,
+        userScrollEnabled = userScrollEnabled,
+        modifier = modifier.then(
+            if (listMaxHeight > 0.dp) {
                 Modifier.heightIn(max = listMaxHeight)
             } else {
                 Modifier
             }
-        ) {
-            books.forEach { book ->
-                item(book.isbn) {
-                    this.itemContent(book)
+        )
+    ) {
+        if (tag.isNotEmpty()) {
+            stickyHeader(tag) {
+                BookListTopBar(tag = tag, onExpandTagClicked)
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Color.LightGray)
+                )
+            }
+        }
+        books.forEach { book ->
+            item(book.isbn) {
+                this.itemContent(book)
+                if (lazyListState.canScrollBackward && !lazyListState.canScrollForward) {
+                    LaunchedEffect(lazyListState) {
+                        onScrollToBottom()
+                    }
                 }
             }
+        }
+        item {
+            loadingIndicator()
         }
     }
 }
