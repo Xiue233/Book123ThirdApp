@@ -13,7 +13,6 @@ import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import io.github.xiue233.book123.ui.component.MultiOptionsMenuState
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -45,11 +44,18 @@ class SortViewModel @Inject constructor(
 
     val bookListState = _bookListState.asStateFlow()
 
+    private var _loadingIndicatorState = mutableStateOf(LoadingIndicatorState.HasMore)
+    val loadingIndicatorState = _loadingIndicatorState
+
     fun onOptionsChanged() {
         loadBooksDataByTag()
+        _loadingIndicatorState.value = LoadingIndicatorState.HasMore
     }
 
     fun onNextPageNeeded() {
+        if (loadingIndicatorState.value == LoadingIndicatorState.NoMore){
+            return
+        }
         loadBooksDataByTag(overlay = false, pageStep = 1)
     }
 
@@ -91,11 +97,15 @@ class SortViewModel @Inject constructor(
                     }
                 }
             ).collect {
-                if (it.isEmpty()) {
-                    _bookListState.value = BookSortListState.None
-                    return@collect
-                }
                 _bookListState.update { oldState ->
+                    if (it.isEmpty() && oldState !is BookSortListState.Success) { // No data at all
+                        return@update BookSortListState.None
+                    } else if (it.isEmpty()
+                        && oldState is BookSortListState.Success
+                        && oldState.page >= 1
+                    ) { // there is no more pages in current options
+                        _loadingIndicatorState.value = LoadingIndicatorState.NoMore
+                    }
                     if (overlay) BookSortListState.Success(it, page)
                     else if (oldState !is BookSortListState.Success) {
                         BookSortListState.Success(it, page)
@@ -112,6 +122,16 @@ class SortViewModel @Inject constructor(
 
     fun expandOrCloseMenu() {
         _expandSortMenu.value = !expandSortMenu.value
+    }
+}
+
+data class LoadingIndicatorState(
+    val showLoadingIndicator: Boolean = true,
+    val message: String = ""
+) {
+    companion object {
+        val HasMore = LoadingIndicatorState(message = "正在加载中...")
+        val NoMore = LoadingIndicatorState(showLoadingIndicator = false, message = "已经到底了")
     }
 }
 
