@@ -6,10 +6,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,7 +38,8 @@ import io.github.xiue233.book123.ui.navigation.NavigationActions
 @Composable
 fun HomeScreen(
     navigationActions: NavigationActions,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigateToSortWithTag: (String) -> Unit
 ) {
     val recommendState by viewModel.recommendState
 
@@ -92,7 +90,7 @@ fun HomeScreen(
                             navigationActions.navigateToBookDetail(isbn)
                         },
                         onExpandTagClicked = { tag ->
-                            //TODO navigate to sort screen with the specific tag
+                            navigateToSortWithTag(tag)
                         }
                     )
                 }

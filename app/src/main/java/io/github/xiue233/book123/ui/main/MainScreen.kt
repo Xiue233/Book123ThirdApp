@@ -23,10 +23,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
 import io.github.xiue233.book123.ui.main.home.HomeScreen
 import io.github.xiue233.book123.ui.main.mine.MineScreen
 import io.github.xiue233.book123.ui.main.sort.SortScreen
+import io.github.xiue233.book123.ui.main.sort.SortViewModel
 import io.github.xiue233.book123.ui.navigation.NavigationActions
 
 private val BOTTOM_NAVIGATION_ITEMS
@@ -55,6 +57,7 @@ fun MainScreen(
     state: MainScreenState = rememberMainScreenState(),
 ) {
     val selectedItemType: BottomNavigationType by state.selectedItem
+    val sortViewModel: SortViewModel = hiltViewModel()
 
     Scaffold(
         bottomBar = {
@@ -74,8 +77,16 @@ fun MainScreen(
                 .padding(bottom = paddingValues.calculateBottomPadding()) // allow screen adapt to status bar by itself
         ) {
             when (it) {
-                BottomNavigationType.Home -> HomeScreen(navigationActions)
-                BottomNavigationType.Sort -> SortScreen(navigationActions)
+                BottomNavigationType.Home -> HomeScreen(navigationActions) { tag ->
+                    state.onSelectItem(BottomNavigationType.Sort)
+                    sortViewModel.loadOptionsByTag(tag)
+                }
+
+                BottomNavigationType.Sort -> SortScreen(
+                    navigationActions,
+                    sortViewModel = sortViewModel
+                )
+
                 BottomNavigationType.Mine -> MineScreen(navigationActions)
             }
         }

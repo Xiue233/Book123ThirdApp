@@ -13,7 +13,6 @@ import io.github.xiue233.book123.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -43,7 +42,8 @@ class HomeViewModel @Inject constructor(
         _recommendState.value = RecommendState.Loading
         viewModelScope.launch {
             flow {
-                BookTags.TAGS.forEach { tag ->
+                // exclude valid tag
+                BookTags.TAGS.subList(1, BookTags.TAGS.size).forEach { tag ->
                     bookRepository.fetchRecentHotBooks(
                         tag,
                         requestHandler = object : RequestHandler {

@@ -60,6 +60,7 @@ fun SortScreen(
 
     Column {
         SortTopBar(
+            addition = sortMenuState.optionState["标签"] ?: "Unknown",
             expandSortMenu = expandSortMenu,
             onExpandButtonClicked = sortViewModel::expandOrCloseMenu
         )
@@ -126,12 +127,13 @@ fun MessageText(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortTopBar(
+    addition: String,
     expandSortMenu: Boolean = true,
     onExpandButtonClicked: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.sort_top_bar_title))
+            Text(text = stringResource(R.string.sort_top_bar_title) + ": $addition")
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant

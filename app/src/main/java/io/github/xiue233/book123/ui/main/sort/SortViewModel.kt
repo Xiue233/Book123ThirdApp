@@ -28,13 +28,7 @@ class SortViewModel @Inject constructor(
 
     private var _sortMenuState: MutableState<MultiOptionsMenuState> = mutableStateOf(
         MultiOptionsMenuState(
-            mapOf(
-                "标签" to BookTags.TAGS.run {
-                    subList(1, size - 1)
-                },
-                "排序方式" to listOf("最近更新", "评分", "出版日期"),
-                "过滤条件" to listOf("有资源", "全部")
-            )
+            SORT_MENU_OPTIONS
         )
     )
     val sortMenuState: State<MultiOptionsMenuState> = _sortMenuState
@@ -53,7 +47,7 @@ class SortViewModel @Inject constructor(
     }
 
     fun onNextPageNeeded() {
-        if (loadingIndicatorState.value == LoadingIndicatorState.NoMore){
+        if (loadingIndicatorState.value == LoadingIndicatorState.NoMore) {
             return
         }
         loadBooksDataByTag(overlay = false, pageStep = 1)
@@ -123,7 +117,32 @@ class SortViewModel @Inject constructor(
     fun expandOrCloseMenu() {
         _expandSortMenu.value = !expandSortMenu.value
     }
+
+    fun loadOptionsByTag(tag: String) {
+        _sortMenuState.value.setOptions(
+            mutableMapOf<String, String>().apply {
+                putAll(DEFAULT_SORT_MENU_OPTIONS)
+                put("标签", tag)
+            }
+        )
+        onOptionsChanged()
+    }
 }
+
+private val SORT_MENU_OPTIONS = mapOf(
+    "标签" to BookTags.TAGS.run {
+        subList(1, size - 1)
+    },
+    "排序方式" to listOf("最近更新", "评分", "出版日期"),
+    "过滤条件" to listOf("有资源", "全部")
+)
+
+private val DEFAULT_SORT_MENU_OPTIONS =
+    mutableMapOf<String, String>().apply {
+        for (k in SORT_MENU_OPTIONS.keys) {
+            put(k, SORT_MENU_OPTIONS[k]!![0])
+        }
+    }.toMap()
 
 data class LoadingIndicatorState(
     val showLoadingIndicator: Boolean = true,

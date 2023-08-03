@@ -112,7 +112,7 @@ fun MultiOptionsMenu(
 class MultiOptionsMenuState(
     val multiOptions: MultiOptions
 ) {
-    private var _optionState: MutableMap<String, String> =
+    private val _optionState: MutableMap<String, String> =
         mutableStateMapOf<String, String>().apply {
             for (option in multiOptions) {
                 put(option.key, option.value[0])
@@ -122,6 +122,13 @@ class MultiOptionsMenuState(
 
     fun selectItem(tag: String, option: String) {
         _optionState[tag] = option
+    }
+
+    fun setOptions(options: Map<String, String>) {
+        _optionState.apply {
+            clear()
+            putAll(options)
+        }
     }
 }
 
