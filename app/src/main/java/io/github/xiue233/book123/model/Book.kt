@@ -8,7 +8,7 @@ interface Book {
     val isbn: String
     val title: String
     val img: String
-    val author: String
+    val author: String?
     val imgHost: String
     val downloadHost: String
 }
@@ -45,7 +45,7 @@ data class BookPreview(
     override val title: String,
     @SerializedName("img")
     override val img: String,
-    override val author: String,
+    override val author: String?,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
 ) : AbstractBookPreview()
@@ -55,7 +55,7 @@ data class BookSummary(
     override val title: String,
     @SerializedName("img")
     override val img: String,
-    override val author: String,
+    override val author: String?,
     override val pubDate: String,
     override val tags: List<String>,
     override val rate: String,
@@ -69,7 +69,7 @@ data class BookDetail(
     override val title: String,
     @SerializedName("img")
     override val img: String,
-    override val author: String,
+    override val author: String?,
     override val binding: String,
     @SerializedName("catelogues") // A typo in json
     override val catalogues: List<String>,

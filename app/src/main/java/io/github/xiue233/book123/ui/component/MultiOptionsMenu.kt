@@ -41,8 +41,7 @@ fun MultiOptionsMenuPreview() {
                 )
             ),
             itemColor = Color.LightGray.copy(alpha = 0.6f)
-        ) { tag, option ->
-        }
+        )
     }
 
 }
@@ -57,7 +56,7 @@ fun MultiOptionsMenu(
     shape: Shape = RoundedCornerShape(10.dp),
     itemColor: Color = Color.LightGray,
     selectedItemColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-    onItemSelected: (String, String) -> Unit = { _, _ -> },
+    onOptionsChanged: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -92,8 +91,10 @@ fun MultiOptionsMenu(
                             selected = selected,
                             selectedItemColor = selectedItemColor,
                             onClick = {
-                                state.selectItem(tag, itemOptionValue)
-                                onItemSelected(tag, itemOptionValue)
+                                if (!selected) {
+                                    state.selectItem(tag, itemOptionValue)
+                                    onOptionsChanged()
+                                }
                             }
                         )
                     }

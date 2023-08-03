@@ -12,27 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.xiue233.book123.ui.theme.Typography
 
-@Preview
 @Composable
-fun BookPreviewItemPreview() {
-    BookPreviewItem(
-        imgURL = "https://file3.book123.info/covers/s/9787567590274.jpg",
-        title = "古典柏拉图主义哲学导论",
-        author = "梁中和 编著"
-    )
-}
-
-@Composable
-fun BookPreviewItem(
-    //TODO adapt to various sizes of screens
+fun BookSummaryItem(
     modifier: Modifier = Modifier,
     imgURL: String,
     title: String,
     author: String,
+    rate: String,
+    summary: String
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -44,8 +36,8 @@ fun BookPreviewItem(
         BookImage(
             imgURL = imgURL,
             modifier = Modifier
-                .height(50.dp)
-                .width(45.dp)
+                .height(95.dp)
+                .width(85.dp)
         )
         Column(
             modifier = Modifier
@@ -55,9 +47,34 @@ fun BookPreviewItem(
             Text(text = title, style = Typography.titleMedium)
             Text(
                 text = author,
-                style = Typography.bodyMedium,
+                style = Typography.labelMedium.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
                 color = Color.Gray
+            )
+            Text(
+                text = "评分: $rate",
+                style = Typography.labelSmall,
+                color = Color.Gray
+            )
+            Text(
+                text = summary,
+                style = Typography.bodySmall,
+                color = Color.Gray,
+                maxLines = 3,
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun PreviewBookSummaryItem() {
+    BookSummaryItem(
+        imgURL = "",
+        title = "Book1",
+        author = "Author1",
+        rate = "评分: 10.0",
+        summary = "“魔域之战”后，雅各布回到美国，他的异能朋友也来到佛罗里达。一次偶然的机会，他们在爷爷住处发现了地堡，艾贝作为一名双面特工的秘密逐渐浮现……    他们循迹穿越美国西部，找到正在被猎杀的异能人努尔，试图把她送至10044时光圈。可脱离伊姆布莱恩的保护伞，雅各布和朋友的行动障碍重重，甚至引发各方势力间的冲突。这一次的危险使命能否完成？拯救努尔的同时，他们也面临挑起异能部族间战争的"
+    )
 }

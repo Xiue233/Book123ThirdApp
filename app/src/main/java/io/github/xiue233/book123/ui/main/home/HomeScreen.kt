@@ -1,6 +1,7 @@
 package io.github.xiue233.book123.ui.main.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
@@ -124,10 +125,11 @@ fun HomeBookList(
                         BookPreviewItem(
                             imgURL = it.getImgUrl(),
                             title = it.title,
-                            author = it.author
-                        ) {
-                            onItemClicked(it.isbn)
-                        }
+                            author = it.author ?: "",
+                            modifier = Modifier.clickable {
+                                onItemClicked(it.isbn)
+                            }
+                        )
                     }
                 }
             }
@@ -176,7 +178,7 @@ fun HomeSearchBar(
                                 imgURL = it.getImgUrl(),
                                 title = it.title ?: "null", // avoid GSON parse a null value
                                 author = it.author ?: "",
-                                onClick = {
+                                modifier = Modifier.clickable {
                                     navigateToBookDetail(it.isbn)
                                 }
                             )

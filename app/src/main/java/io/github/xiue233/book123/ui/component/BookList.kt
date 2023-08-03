@@ -40,7 +40,7 @@ fun BookListPreview() {
             BookPreview("1919810", "Book2", "", "Author2")
         )
     ) {
-        BookPreviewItem(imgURL = it.getImgUrl(), title = it.title, author = it.author)
+        BookPreviewItem(imgURL = it.getImgUrl(), title = it.title, author = it.author ?: "")
     }
 }
 
