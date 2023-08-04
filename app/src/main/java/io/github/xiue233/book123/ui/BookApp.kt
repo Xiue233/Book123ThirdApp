@@ -6,9 +6,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.SystemUiController
+import io.github.xiue233.book123.ui.detail.BookDetailScreen
 import io.github.xiue233.book123.ui.main.MainScreen
 import io.github.xiue233.book123.ui.navigation.NavRoutes
 import io.github.xiue233.book123.ui.navigation.NavigationActions
@@ -45,6 +48,19 @@ fun BookApp(
         }
         composable(NavRoutes.Main.route) {
             MainScreen(navigationActions)
+        }
+        composable(NavRoutes.BookDetail.route,
+            arguments = listOf(
+                navArgument("isbn") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
+        ) {
+            BookDetailScreen(
+                navigationActions = navigationActions,
+                isbn = it.arguments?.getString("isbn", "") ?: ""
+            )
         }
     }
 }

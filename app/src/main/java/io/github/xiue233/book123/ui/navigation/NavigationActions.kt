@@ -6,7 +6,9 @@ import androidx.navigation.NavHostController
 sealed class NavRoutes(val route: String) {
     object Splash : NavRoutes("Splash")
     object Main : NavRoutes("Main")
-    object BookDetail : NavRoutes("BookDetail")
+    object BookDetail : NavRoutes("BookDetail/{isbn}") {
+        fun getRoute(isbn: String) = "BookDetail/$isbn"
+    }
 }
 
 class NavigationActions(
@@ -23,8 +25,10 @@ class NavigationActions(
     }
 
     val navigateToBookDetail: (String) -> Unit = { isbn ->
-//        navHostController.navigate(NavRoutes.BookDetail.route) {
-//            //TODO use BookDetail/{isbn}
-//        }
+        navHostController.navigate(NavRoutes.BookDetail.getRoute(isbn))
+    }
+
+    fun popBackStack() {
+        navHostController.popBackStack()
     }
 }
