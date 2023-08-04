@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.androidApplication)
@@ -10,12 +8,12 @@ plugins {
 
 android {
     namespace = "io.github.xiue233.book123"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "io.github.xiue233.book123"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -70,6 +68,8 @@ dependencies {
     implementation(libs.accompanist.navigation.animation)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.compose.window.size)
+    implementation(libs.compose.constrain.layout)
+    implementation(libs.material.icons.extended)
 
     implementation(libs.hilt)
     implementation(libs.androidx.window)

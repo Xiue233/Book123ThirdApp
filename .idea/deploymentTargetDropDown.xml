@@ -8,6 +8,9 @@
       <entry key="MultiOptionsMenuPreview">
         <State />
       </entry>
+      <entry key="PreviewLoadingAnimation">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>

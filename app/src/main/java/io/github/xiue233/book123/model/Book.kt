@@ -1,6 +1,7 @@
 package io.github.xiue233.book123.model
 
 import android.text.TextUtils
+import androidx.compose.runtime.Immutable
 import com.google.gson.annotations.SerializedName
 import io.github.xiue233.book123.network.Book123Service
 
@@ -40,6 +41,7 @@ interface IBookDetail : IBookSummary {
     val downloadUrl: String
 }
 
+@Immutable
 data class BookPreview(
     override val isbn: String,
     override val title: String,
@@ -50,6 +52,7 @@ data class BookPreview(
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
 ) : AbstractBookPreview()
 
+@Immutable
 data class BookSummary(
     override val isbn: String,
     override val title: String,
@@ -64,6 +67,7 @@ data class BookSummary(
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
 ) : IBookSummary, AbstractBookPreview()
 
+@Immutable
 data class BookDetail(
     override val isbn: String,
     override val title: String,

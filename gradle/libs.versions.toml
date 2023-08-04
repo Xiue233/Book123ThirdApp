@@ -19,6 +19,8 @@ coil = "2.4.0"
 hilt-navigation-compose = "1.0.0"
 compose-window-size = "1.1.1"
 window = "1.1.0"
+compose-constrain-layout = "1.0.1"
+material-icons-extended = "1.6.0-alpha02"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -50,6 +52,8 @@ coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 compose-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-window-size" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
+compose-constrain-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose-constrain-layout" }
+material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
