@@ -169,22 +169,21 @@ private fun BookDetailPage(
                     "出版时间" to bookDetail.pubDate,
                     "文件格式" to bookDetail.fileType,
                     "文件大小" to "%.3f MB".format(bookDetail.fileSize / 1024f / 1024f),
-                    "评分" to bookDetail.rate
+                    "评分" to bookDetail.rate.ifEmpty { "暂无评分信息" }
                 )
             )
             mapOf(
-                "内容简介"
-                        to Html.fromHtml(bookDetail.summary, Html.FROM_HTML_MODE_LEGACY).toString(),
-                "目录" to bookDetail.catalogues.reduce { acc, s ->
+                "内容简介" to
+                        Html.fromHtml(
+                            bookDetail.summary ?: "", // GSON may give a null value
+                            Html.FROM_HTML_MODE_LEGACY
+                        ).toString(),
+                "目录" to (bookDetail.catalogues?.reduce { acc, s ->
                     acc.plus("\n$s")
-                }.let {
-                    it.ifEmpty { "暂无目录信息" }
-                },
-                "用户评论" to bookDetail.comments.reduce { acc, s ->
-                    acc.plus("\n$s")
-                }.let {
-                    it.ifEmpty { "暂无用户评论" }
-                },
+                } ?: "暂无目录信息"),
+                "用户评论" to (bookDetail.comments?.reduce { acc, s ->
+                    acc.plus("\n\n$s")
+                } ?: "暂无用户评论"),
             ).forEach { (tag, text) ->
                 LargeTextWithTag(tag = tag, text = text)
             }
@@ -228,7 +227,7 @@ fun DownloadButton(
     Row(
         modifier = Modifier
             .then(modifier)
-            .clip(RoundedCornerShape(5.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(Color.Red)
             .clickable {
                 onClick()
@@ -241,21 +240,22 @@ fun DownloadButton(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
-                .weight(3f)
+                .padding(horizontal = 10.dp)
+                .align(Alignment.CenterVertically)
         )
         Spacer(
             modifier = Modifier
                 .padding(horizontal = 5.dp, vertical = 2.dp)
                 .fillMaxHeight()
-                .width(1.dp)
+                .width(3.dp)
+                .clip(RoundedCornerShape(5.dp))
                 .background(Color.White)
         )
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.CloudDownload),
             contentDescription = "Download Icon",
             tint = Color.White,
-            modifier = Modifier
-                .weight(2f)
+            modifier = Modifier.align(Alignment.CenterVertically)
         )
     }
 }

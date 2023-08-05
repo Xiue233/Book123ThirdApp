@@ -31,8 +31,8 @@ interface IBookSummary : IBookPreview {
 
 interface IBookDetail : IBookSummary {
     val binding: String
-    val catalogues: List<String>
-    val comments: List<String>
+    val catalogues: List<String>?
+    val comments: List<String>?
     val lastUpdate: String
     val price: String
     val publisher: String
@@ -76,8 +76,8 @@ data class BookDetail(
     override val author: String?,
     override val binding: String,
     @SerializedName("catelogues") // A typo in json
-    override val catalogues: List<String>,
-    override val comments: List<String>,
+    override val catalogues: List<String>?,
+    override val comments: List<String>?,
     override val lastUpdate: String,
     override val price: String,
     override val pubDate: String,
