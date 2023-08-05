@@ -226,7 +226,10 @@ private fun BookDetailPage(
             )
             DownloadButton(
                 text = bookDetail.fileType,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
+                onClick = {
+                    //TODO Check file existence and download file
+                }
             )
             ScreenSpacer(Modifier.padding(vertical = 20.dp, horizontal = 20.dp))
             AnimatedVisibility(visible = relatedBooks.isNotEmpty()) {
