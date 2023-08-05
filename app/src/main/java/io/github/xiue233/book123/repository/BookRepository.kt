@@ -69,7 +69,7 @@ interface BookRepository {
     suspend fun searchRelatedBooksByISBN(
         isbn: String,
         requestHandler: RequestHandler = EmptyRequestHandler
-    ): Flow<BookSummaries>
+    ): Flow<List<BookPreview>>
 
     suspend fun fetchRecentHotBooks(
         tag: String = "undefined",
@@ -213,8 +213,8 @@ class BookRepositoryImpl @Inject constructor(
     override suspend fun searchRelatedBooksByISBN(
         isbn: String,
         requestHandler: RequestHandler
-    ): Flow<BookSummaries> = requestWithHandler(requestHandler) {
-        flow<BookSummaries> {
+    ): Flow<List<BookPreview>> = requestWithHandler(requestHandler) {
+        flow<List<BookPreview>> {
             book123Service.searchRelatedBooksByISBN(isbn)
                 .onFailure {
                     requestHandler.onFailure(message())

@@ -5,6 +5,7 @@ import io.github.xiue233.book123.model.BookDetail
 import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.model.BookSearchResult
 import io.github.xiue233.book123.model.CheckBookFileResult
+import io.github.xiue233.book123.model.RelatedBooksResult
 import io.github.xiue233.book123.model.SimpleSearchResult
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -114,7 +115,7 @@ interface Book123Service {
     @GET("api/getRelatedBook")
     suspend fun searchRelatedBooksByISBN(
         @Query("isbn") isbn: String
-    ): ApiResponse<BookSearchResult>
+    ): ApiResponse<RelatedBooksResult>
 
     @GET("api/recentHot")
     suspend fun fetchRecentHotBooks(

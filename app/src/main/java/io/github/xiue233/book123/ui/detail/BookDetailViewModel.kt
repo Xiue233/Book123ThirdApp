@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.xiue233.book123.model.BookDetail
+import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import kotlinx.coroutines.cancel
@@ -21,7 +22,14 @@ class BookDetailViewModel @Inject constructor(
     private var _state: MutableState<BookDetailState> = mutableStateOf(BookDetailState.Loading)
     val state: State<BookDetailState> = _state
 
+    private var _relatedBooks: MutableList<BookPreview> = mutableListOf()
+    val relatedBooks: List<BookPreview> = _relatedBooks
+
     fun loadData(isbn: String) {
+        if (isbn.isEmpty()) {
+            _state.value = BookDetailState.Failure("ISBN为空，无法查询书籍信息！！！")
+            return
+        }
         viewModelScope.launch {
             bookRepository.fetchBookDetail(isbn,
                 requestHandler = object : RequestHandler {
@@ -38,6 +46,11 @@ class BookDetailViewModel @Inject constructor(
                 })
                 .collect {
                     _state.value = BookDetailState.Success(it)
+                }
+            bookRepository.searchRelatedBooksByISBN(isbn)
+                .collect {
+                    _relatedBooks.clear()
+                    _relatedBooks.addAll(it)
                 }
         }
     }

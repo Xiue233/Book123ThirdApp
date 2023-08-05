@@ -5,3 +5,7 @@ data class BookSearchResult(
     val count: Int = 10,
     val books: List<BookSummary>
 )
+
+data class RelatedBooksResult(
+    val books: List<BookPreview>
+)
