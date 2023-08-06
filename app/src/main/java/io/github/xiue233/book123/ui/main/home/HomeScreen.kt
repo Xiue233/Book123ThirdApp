@@ -51,7 +51,8 @@ fun HomeScreen(
     ) {
         HomeSearchBar(
             viewModel = viewModel,
-            navigateToBookDetail = navigationActions.navigateToBookDetail
+            navigateToBookDetail = navigationActions.navigateToBookDetail,
+            navigateToSearchScreen = navigationActions.navigateToSearchScreen
         )
         Column(
             modifier = Modifier
@@ -143,7 +144,8 @@ fun HomeBookList(
 fun HomeSearchBar(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
-    navigateToBookDetail: (String) -> Unit = {}
+    navigateToBookDetail: (String) -> Unit = {},
+    navigateToSearchScreen: (String) -> Unit = {}
 ) {
     val query by viewModel.query
     val active by viewModel.active
@@ -152,7 +154,10 @@ fun HomeSearchBar(
     DockedSearchBar(
         query = query,
         onQueryChange = viewModel::onQueryChange,
-        onSearch = viewModel::onSearch,
+        onSearch = {
+            viewModel.onSearch(it)
+            navigateToSearchScreen(it)
+        },
         active = active,
         onActiveChange = viewModel::onActiveChange,
         placeholder = { Text(stringResource(id = R.string.home_search_hint)) },

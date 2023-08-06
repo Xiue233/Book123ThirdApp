@@ -4,10 +4,14 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
 sealed class NavRoutes(val route: String) {
-    object Splash : NavRoutes("Splash")
-    object Main : NavRoutes("Main")
-    object BookDetail : NavRoutes("BookDetail/{isbn}") {
-        fun getRoute(isbn: String) = "BookDetail/$isbn"
+    object Splash : NavRoutes("splash")
+    object Main : NavRoutes("main")
+    object BookDetail : NavRoutes("bookDetail/{isbn}") {
+        fun getRoute(isbn: String) = "bookDetail/$isbn"
+    }
+
+    object SearchScreen : NavRoutes("search?query={query}") {
+        fun getRoute(query: String) = "search?query=$query"
     }
 }
 
@@ -26,6 +30,10 @@ class NavigationActions(
 
     val navigateToBookDetail: (String) -> Unit = { isbn ->
         navHostController.navigate(NavRoutes.BookDetail.getRoute(isbn))
+    }
+
+    val navigateToSearchScreen: (String) -> Unit = { query ->
+        navHostController.navigate(NavRoutes.SearchScreen.getRoute(query))
     }
 
     fun popBackStack() {

@@ -59,6 +59,7 @@ import io.github.xiue233.book123.ui.component.BookList
 import io.github.xiue233.book123.ui.component.BookPreviewItem
 import io.github.xiue233.book123.ui.navigation.NavigationActions
 import io.github.xiue233.book123.ui.theme.ShimmerColors
+import io.github.xiue233.book123.util.isNullOrEmpty
 
 @Composable
 fun BookDetailScreen(
@@ -183,12 +184,12 @@ private fun BookDetailPage(
             }
             TextsWithTag(
                 texts = mapOf(
-                    "出版社" to bookDetail.publisher,
-                    "出版时间" to bookDetail.pubDate,
-                    "文件格式" to bookDetail.fileType,
+                    "出版社" to bookDetail.publisher.isNullOrEmpty { "暂无信息" },
+                    "出版时间" to bookDetail.pubDate.isNullOrEmpty { "暂无信息" },
+                    "文件格式" to bookDetail.fileType.isNullOrEmpty { "暂无信息" },
                     "文件大小" to "%.3f MB".format(bookDetail.fileSize / 1024f / 1024f),
                     "ISBN" to bookDetail.isbn,
-                    "评分" to bookDetail.rate.ifEmpty { "暂无评分信息" }
+                    "评分" to bookDetail.rate.isNullOrEmpty { "暂无信息" }
                 )
             )
             mapOf(
@@ -225,8 +226,9 @@ private fun BookDetailPage(
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
             DownloadButton(
-                text = bookDetail.fileType,
+                text = bookDetail.fileType ?: "暂无资源",
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
+                color = if (bookDetail.fileType.isNullOrEmpty()) Color.Black else Color.Red,
                 onClick = {
                     //TODO Check file existence and download file
                 }
@@ -242,7 +244,9 @@ private fun BookDetailPage(
                     books = relatedBooks,
                     userScrollEnabled = false,
                     listMaxHeight = 500.dp,
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .padding(top = 20.dp)
                 ) {
                     BookPreviewItem(imgURL = it.getImgUrl(),
                         title = it.title,
@@ -277,13 +281,14 @@ fun PreviewDownloadButton() {
 fun DownloadButton(
     modifier: Modifier = Modifier,
     text: String,
+    color: Color = Color.Red,
     onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .then(modifier)
             .clip(RoundedCornerShape(10.dp))
-            .background(Color.Red)
+            .background(color)
             .clickable {
                 onClick()
             }

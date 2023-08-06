@@ -11,6 +11,7 @@ import io.github.xiue233.book123.network.Book123Service
 import io.github.xiue233.book123.network.BookTags
 import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
+import io.github.xiue233.book123.ui.component.LoadingIndicatorState
 import io.github.xiue233.book123.ui.component.MultiOptionsMenuState
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -143,16 +144,6 @@ private val DEFAULT_SORT_MENU_OPTIONS =
             put(k, SORT_MENU_OPTIONS[k]!![0])
         }
     }.toMap()
-
-data class LoadingIndicatorState(
-    val showLoadingIndicator: Boolean = true,
-    val message: String = ""
-) {
-    companion object {
-        val HasMore = LoadingIndicatorState(message = "正在加载中...")
-        val NoMore = LoadingIndicatorState(showLoadingIndicator = false, message = "已经到底了")
-    }
-}
 
 sealed class BookSortListState(
     open val books: List<BookSummary>,

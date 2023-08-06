@@ -15,6 +15,7 @@ import io.github.xiue233.book123.ui.detail.BookDetailScreen
 import io.github.xiue233.book123.ui.main.MainScreen
 import io.github.xiue233.book123.ui.navigation.NavRoutes
 import io.github.xiue233.book123.ui.navigation.NavigationActions
+import io.github.xiue233.book123.ui.search.SearchScreen
 import io.github.xiue233.book123.ui.splash.SplashScreen
 import io.github.xiue233.book123.util.DetailedWindowSizeClass
 import kotlinx.coroutines.delay
@@ -60,6 +61,19 @@ fun BookApp(
             BookDetailScreen(
                 navigationActions = navigationActions,
                 isbn = it.arguments?.getString("isbn", "") ?: ""
+            )
+        }
+        composable(NavRoutes.SearchScreen.route,
+            arguments = listOf(
+                navArgument("query") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
+        ) {
+            SearchScreen(
+                navigationActions = navigationActions,
+                queryKey = it.arguments?.getString("query", "") ?: ""
             )
         }
     }

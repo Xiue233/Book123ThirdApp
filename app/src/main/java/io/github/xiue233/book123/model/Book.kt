@@ -23,22 +23,22 @@ abstract class AbstractBookPreview : IBookPreview {
 }
 
 interface IBookSummary : IBookPreview {
-    val pubDate: String
-    val tags: List<String>
-    val rate: String
-    val summary: String
+    val pubDate: String?
+    val tags: List<String>?
+    val rate: String?
+    val summary: String?
 }
 
 interface IBookDetail : IBookSummary {
-    val binding: String
+    val binding: String?
     val catalogues: List<String>?
     val comments: List<String>?
-    val lastUpdate: String
-    val price: String
-    val publisher: String
+    val lastUpdate: String?
+    val price: String?
+    val publisher: String?
     val fileSize: Long
-    val fileType: String
-    val downloadUrl: String
+    val fileType: String?
+    val downloadUrl: String?
 }
 
 @Immutable
@@ -59,10 +59,10 @@ data class BookSummary(
     @SerializedName("img")
     override val img: String,
     override val author: String?,
-    override val pubDate: String,
-    override val tags: List<String>,
-    override val rate: String,
-    override val summary: String,
+    override val pubDate: String?,
+    override val tags: List<String>?,
+    override val rate: String?,
+    override val summary: String?,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
 ) : IBookSummary, AbstractBookPreview()
@@ -74,19 +74,19 @@ data class BookDetail(
     @SerializedName("img")
     override val img: String,
     override val author: String?,
-    override val binding: String,
+    override val binding: String?,
     @SerializedName("catelogues") // A typo in json
     override val catalogues: List<String>?,
     override val comments: List<String>?,
-    override val lastUpdate: String,
-    override val price: String,
-    override val pubDate: String,
-    override val publisher: String,
-    override val rate: String,
-    override val summary: String,
-    override val tags: List<String>,
+    override val lastUpdate: String?,
+    override val price: String?,
+    override val pubDate: String?,
+    override val publisher: String?,
+    override val rate: String?,
+    override val summary: String?,
+    override val tags: List<String>?,
     override val fileSize: Long,
-    override val fileType: String,
+    override val fileType: String?,
     override val downloadUrl: String,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
