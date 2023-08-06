@@ -1,6 +1,7 @@
 package io.github.xiue233.book123.ui.detail
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -14,8 +15,10 @@ import io.github.xiue233.book123.model.BookPreview
 import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
 import io.github.xiue233.book123.service.Downloader
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,6 +68,9 @@ class BookDetailViewModel @Inject constructor(
         }
         val bookDetail = (state.value as BookDetailState.Success).bookDetail
         viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "正在下载", Toast.LENGTH_SHORT).show()
+            }
             Downloader.sendDownloadRequest(
                 context,
                 bookDetail.title, bookDetail.parseDownloadUrl(), bookDetail.fileType ?: ""

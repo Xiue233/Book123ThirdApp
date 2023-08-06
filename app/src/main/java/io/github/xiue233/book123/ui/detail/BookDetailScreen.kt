@@ -97,7 +97,9 @@ fun BookDetailScreen(
                 navigateToBookDetail = { isbn ->
                     navigationActions.navigateToBookDetail(isbn)
                 },
-                onDownload = viewModel::onDownload
+                onDownload = {
+                    viewModel.onDownload()
+                }
             )
         }
     }
