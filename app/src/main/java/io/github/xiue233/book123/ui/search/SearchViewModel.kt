@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
     var query: MutableState<String> = mutableStateOf("")
     var searchExactly: MutableState<Boolean> = mutableStateOf(false)
 
-    private var _expandSortMenu: MutableState<Boolean> = mutableStateOf(true)
+    private var _expandSortMenu: MutableState<Boolean> = mutableStateOf(false)
     val expandSortMenu: State<Boolean> = _expandSortMenu
 
     private var _sortMenuState: MutableState<MultiOptionsMenuState> = mutableStateOf(

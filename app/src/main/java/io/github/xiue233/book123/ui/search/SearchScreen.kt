@@ -59,7 +59,7 @@ fun SearchScreen(
     val expandSortMenu by viewModel.expandSortMenu
     val sortMenuState by viewModel.sortMenuState
     var query by viewModel.query
-    var searchExactly by viewModel.searchExactly
+    var searchExactly by viewModel.searchExactly // TODO add searching exactly
     val loadingIndicatorState by viewModel.loadingIndicatorState
     val bookListState by viewModel.bookListState.collectAsState()
 

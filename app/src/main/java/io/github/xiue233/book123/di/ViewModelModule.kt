@@ -1,9 +1,11 @@
 package io.github.xiue233.book123.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import io.github.xiue233.book123.repository.BookRepository
 import io.github.xiue233.book123.ui.detail.BookDetailViewModel
@@ -29,8 +31,9 @@ object ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideBookDetailViewModel(
+        @ApplicationContext context: Context,
         bookRepository: BookRepository
-    ) = BookDetailViewModel(bookRepository)
+    ) = BookDetailViewModel(context, bookRepository)
 
     @Provides
     @ViewModelScoped

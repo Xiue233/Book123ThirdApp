@@ -96,7 +96,8 @@ fun BookDetailScreen(
                 popBack = navigationActions::popBackStack,
                 navigateToBookDetail = { isbn ->
                     navigationActions.navigateToBookDetail(isbn)
-                }
+                },
+                onDownload = viewModel::onDownload
             )
         }
     }
@@ -138,7 +139,8 @@ private fun BookDetailPage(
     bookDetail: BookDetail,
     relatedBooks: List<BookPreview>,
     popBack: () -> Unit = {},
-    navigateToBookDetail: (String) -> Unit = {}
+    navigateToBookDetail: (String) -> Unit = {},
+    onDownload: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -229,9 +231,8 @@ private fun BookDetailPage(
                 text = bookDetail.fileType ?: "暂无资源",
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
                 color = if (bookDetail.fileType.isNullOrEmpty()) Color.Black else Color.Red,
-                onClick = {
-                    //TODO Check file existence and download file
-                }
+                clickable = bookDetail.canDownload(),
+                onClick = onDownload
             )
             ScreenSpacer(Modifier.padding(vertical = 20.dp, horizontal = 20.dp))
             AnimatedVisibility(visible = relatedBooks.isNotEmpty()) {
@@ -282,6 +283,7 @@ fun DownloadButton(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Red,
+    clickable: Boolean = true,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -289,7 +291,7 @@ fun DownloadButton(
             .then(modifier)
             .clip(RoundedCornerShape(10.dp))
             .background(color)
-            .clickable {
+            .clickable(clickable) {
                 onClick()
             }
             .padding(10.dp)

@@ -1,6 +1,5 @@
 package io.github.xiue233.book123.model
 
-import android.text.TextUtils
 import androidx.compose.runtime.Immutable
 import com.google.gson.annotations.SerializedName
 import io.github.xiue233.book123.network.Book123Service
@@ -87,9 +86,13 @@ data class BookDetail(
     override val tags: List<String>?,
     override val fileSize: Long,
     override val fileType: String?,
-    override val downloadUrl: String,
+    override val downloadUrl: String?,
     override val imgHost: String = Book123Service.IMG_HOST_URL,
     override val downloadHost: String = Book123Service.DOWNLOAD_HOST_URL,
 ) : IBookDetail, AbstractBookPreview() {
-    fun canDownload() = TextUtils.isEmpty(downloadUrl)
+    fun canDownload() = !downloadUrl.isNullOrEmpty() && !fileType.isNullOrEmpty()
+
+    fun parseDownloadUrl(
+        downloadHost: String = Book123Service.DOWNLOAD_HOST_URL
+    ) = downloadHost + downloadUrl
 }

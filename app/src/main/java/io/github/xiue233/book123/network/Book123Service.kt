@@ -56,7 +56,7 @@ interface Book123Service {
     companion object {
         const val BASE_URL = "https://www.book123.info/"
         const val IMG_HOST_URL = "https://file3.book123.info/"
-        const val DOWNLOAD_HOST_URL = "https://static.file123.info:8443/"
+        const val DOWNLOAD_HOST_URL = "https://static2.file123.info"
 
         sealed class SortType(val type: String) {
             object LastUpdate : SortType("lastUpdate")
