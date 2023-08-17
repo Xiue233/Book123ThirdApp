@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "io.github.xiue233.book123",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 202308171,
+      "versionName": "1.0.1",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
