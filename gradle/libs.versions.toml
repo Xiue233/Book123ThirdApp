@@ -1,6 +1,6 @@
 [versions]
-agp = "8.2.0-alpha13"
-kotlin = "1.8.10"
+agp = "8.2.2"
+kotlin = "1.8.0"
 hilt = "2.44"
 core-ktx = "1.10.1"
 junit = "4.13.2"
@@ -59,3 +59,4 @@ material-icons-extended = { group = "androidx.compose.material", name = "materia
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+

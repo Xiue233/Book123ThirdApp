@@ -46,7 +46,7 @@ android {
         jvmToolchain(11)
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.4.0"
     }
     packaging {
         resources {
