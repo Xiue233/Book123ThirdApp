@@ -44,11 +44,11 @@ private val BOTTOM_NAVIGATION_ITEMS
             icon = Icons.Default.List,
             type = BottomNavigationType.Sort
         ),
-        BottomNavigationItem(
-            label = stringResource(id = R.string.navigation_mine),
-            icon = Icons.Default.AccountCircle,
-            type = BottomNavigationType.Mine
-        ),
+//        BottomNavigationItem(
+//            label = stringResource(id = R.string.navigation_mine),
+//            icon = Icons.Default.AccountCircle,
+//            type = BottomNavigationType.Mine
+//        ),
     )
 
 @Composable

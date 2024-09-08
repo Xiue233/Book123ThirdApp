@@ -55,7 +55,7 @@ object BookTags {
 interface Book123Service {
     companion object {
         const val BASE_URL = "https://www.book345.com/"
-        const val IMG_HOST_URL = "https://file3.book345.com/"
+        const val IMG_HOST_URL = "https://static.book345.com/"
         const val DOWNLOAD_HOST_URL = "https://static2.book345.com"
 
         sealed class SortType(val type: String) {
@@ -134,7 +134,7 @@ interface Book123Service {
         @Query("page") page: Int = 1,
     ): ApiResponse<SimpleSearchResult>
 
-    @GET("https://static2.file123.info/api/checkHasFile")
+    @GET("$DOWNLOAD_HOST_URL/api/checkHasFile")
     suspend fun checkHasBookFile(
         @Query("fileName") fileName: String
     ): ApiResponse<CheckBookFileResult>

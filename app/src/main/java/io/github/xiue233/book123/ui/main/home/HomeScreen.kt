@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.xiue233.book123.R
 import io.github.xiue233.book123.model.BookPreview
+import io.github.xiue233.book123.model.BookSummary
 import io.github.xiue233.book123.network.BookTags
 import io.github.xiue233.book123.ui.component.BookList
 import io.github.xiue233.book123.ui.component.BookPreviewItem
@@ -103,7 +104,7 @@ fun HomeScreen(
 @Composable
 fun HomeBookList(
     modifier: Modifier = Modifier,
-    hotBooks: Map<String, List<BookPreview>> = mapOf(),
+    hotBooks: Map<String, List<BookSummary>> = mapOf(),
     tags: List<String> = BookTags.TAGS,
     onItemClicked: (String) -> Unit = {},
     onExpandTagClicked: (String) -> Unit = {}

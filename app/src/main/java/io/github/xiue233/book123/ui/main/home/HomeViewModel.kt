@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.xiue233.book123.model.BookPreview
+import io.github.xiue233.book123.model.BookSummary
 import io.github.xiue233.book123.network.BookTags
 import io.github.xiue233.book123.network.RequestHandler
 import io.github.xiue233.book123.repository.BookRepository
@@ -45,8 +46,8 @@ class HomeViewModel @Inject constructor(
             flow {
                 // exclude valid tag
                 BookTags.TAGS.subList(1, BookTags.TAGS.size).forEach { tag ->
-                    bookRepository.fetchRecentHotBooks(
-                        tag,
+                    bookRepository.searchBookByTag(
+                        tag, count = 5,
                         requestHandler = object : RequestHandler {
                             override fun onStart() {
                             }
@@ -127,8 +128,8 @@ sealed class HomeSearchState {
 }
 
 sealed class RecommendState {
-    private val _hotBooks: MutableMap<String, List<BookPreview>> = mutableMapOf()
-    val hotBooks: Map<String, List<BookPreview>> = _hotBooks
+    private val _hotBooks: MutableMap<String, List<BookSummary>> = mutableMapOf()
+    val hotBooks: Map<String, List<BookSummary>> = _hotBooks
 
     object None : RecommendState()
 
@@ -141,7 +142,7 @@ sealed class RecommendState {
     class Has() : RecommendState()
 
     fun addHotBooks(
-        books: Map<String, List<BookPreview>>
+        books: Map<String, List<BookSummary>>
     ) {
         _hotBooks.putAll(books)
     }
